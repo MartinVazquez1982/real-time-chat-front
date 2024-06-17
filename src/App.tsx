@@ -3,6 +3,7 @@ import Background from './components/background/background'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import SignUp from './pages/signUp';
+import ForgotPassword from './pages/forgotPassword';
 
 
 
@@ -16,6 +17,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Routes>
         </div>
       </BrowserRouter>

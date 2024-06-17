@@ -10,7 +10,7 @@ function Login () {
         <Input label='Username' type='text'/>
         <Input label='Password' type='password'/>
         <div className='links'>
-          <a id='forgot-password' href="">Forgot Password</a>
+          <a id='forgot-password' href="/forgot-password">Forgot Password</a>
           <a id='signup' href="/sign-up">Sign up</a>
         </div>
         <ButtonForm text='LOGIN'/>
