@@ -1,7 +1,13 @@
+@font-face {
+  font-family: 'font-normal';
+  src: url('/src/assets/fonts/Ubuntu-Medium.ttf');
+}
+
 body, html, #root {
   height: 100%;
   margin: 0;
   padding: 0;
   background-color: #242424;
   overflow: hidden;
+  font-family: 'font-normal';
 }

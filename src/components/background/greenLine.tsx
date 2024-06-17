@@ -1,4 +1,4 @@
-import '../../assets/styles/lineGreen.css'
+import '../../assets/styles/components/lineGreen.css'
 
 function LineGreen() {
   return(

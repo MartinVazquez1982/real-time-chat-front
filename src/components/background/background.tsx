@@ -1,6 +1,6 @@
 import LineGreen from "./greenLine"
 import SquareBackgroundItem from "./squareBackgroundItem"
-import '../../assets/styles/background.css'
+import '../../assets/styles/components/background.css'
 import { useState, useEffect } from 'react'
 
 function Background () {

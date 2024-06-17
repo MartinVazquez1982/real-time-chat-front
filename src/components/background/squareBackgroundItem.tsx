@@ -1,4 +1,4 @@
-import '../../assets/styles/squareBackgroundItem.css'
+import '../../assets/styles/components/squareBackgroundItem.css'
 
 function SquareBackgroundItem () {
     return (
