@@ -6,7 +6,7 @@ interface props {
 
 const ButtonForm: React.FC<props> = ({text}) => {
     return (
-        <button>{text}</button>
+        <button type='submit'>{text}</button>
     )
 }
 

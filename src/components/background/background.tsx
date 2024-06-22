@@ -28,8 +28,8 @@ function Background () {
     <>
       <LineGreen></LineGreen>
       <div className="squares">
-        { amountSquare.map(() => (
-          <SquareBackgroundItem></SquareBackgroundItem>
+        { amountSquare.map(i => (
+          <SquareBackgroundItem key={i}></SquareBackgroundItem>
         ))}
       </div>
       </>
