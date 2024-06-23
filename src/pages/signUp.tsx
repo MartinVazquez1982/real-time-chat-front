@@ -14,7 +14,6 @@ function SignUp () {
   */
 
   const [ newUser, setNewUser ] = useState<RegisterConfirmType>({username:'', password:'', confirmPassword:''})
-  const [ userApi, setuserApi ] = useState<RegisterType>({username:'', password:''})
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -26,13 +25,22 @@ function SignUp () {
 
   const handleButton = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(newUser.username)
-    if ( newUser.password === newUser.confirmPassword ) {
-      setuserApi({
-        username: newUser.username,
-        password: newUser.password
-      })
-      UserSystem.register(userApi) // Ver tema de errores
+    const { username, password, confirmPassword } = newUser
+    if ( password === confirmPassword ) {
+      const api: RegisterType = { username, password }
+      UserSystem.register(api)
+      .then( res => {
+        console.log(res)
+        if (res.status !== 200) {
+          console.error('Error')
+        } else {
+          setNewUser({username:'', password:'', confirmPassword:''})
+        }
+      }).catch( err => {
+        console.error(err)
+        console.log('pase')
+      }
+      ) // Ver tema de errores
     }
   }
 
@@ -41,9 +49,9 @@ function SignUp () {
     <section>
       <h1>SIGN UP</h1>
       <form onSubmit={handleButton}>
-        <Input label='Username' type='text' name='username' hangle={handleChange}/>
-        <Input label='Password' type='password' name='password' hangle={handleChange}/>
-        <Input label='Confirm Password' type='password' name='confirmPassword' hangle={handleChange}/>
+        <Input label='Username' type='text' name='username' value={newUser.username} hangle={handleChange}/>
+        <Input label='Password' type='password' name='password' value={newUser.password} hangle={handleChange}/>
+        <Input label='Confirm Password' type='password' name='confirmPassword' value={newUser.confirmPassword} hangle={handleChange}/>
         <div className='links'>
           <p id='forgot-password'>Already have an account?</p>
           <a id='signup' href="/">Sign in</a>
