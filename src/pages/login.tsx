@@ -4,10 +4,12 @@ import Input from '../components/forms/input'
 import { LoginType } from '../type/userSystem'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import { UserSystem } from '../services/userSystem'
+import { useNavigate } from 'react-router-dom';
 
 function Login () {
 
   const [ user, setUser ] = useState<LoginType>({ username:"", password:"" })
+  const navigate = useNavigate()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,7 +26,7 @@ function Login () {
       if (data.status !== 200){
         console.error('error')
       } else {
-        console.log(data)
+        navigate(`/chat/${data.user.username}`)
       }
     }) // Ver temas de errores
   }

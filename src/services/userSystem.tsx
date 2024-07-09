@@ -6,13 +6,14 @@ export class UserSystem {
         user: LoginType
     ) {
         const response = await fetch(
-            'http://localhost:3000/login',
+            'http://localhost:3000/auth/login',
             {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json' 
+                  'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user)
+                body: JSON.stringify(user),
+                credentials: 'include'
             }
         )
         return response.json()
@@ -22,7 +23,7 @@ export class UserSystem {
         newUser: RegisterType
     ) {
         const response = await fetch(
-            'http://localhost:3000/register',
+            'http://localhost:3000/auth/register',
             {
                 method: 'POST',
                 headers: {
@@ -33,5 +34,4 @@ export class UserSystem {
         )
         return response.json()
     }
-
 }

@@ -15,7 +15,6 @@ const Input: React.FC<props> = ({label, type, name, value, hangle}) => {
   const [labelUp, setLabelUp] = useState(false)
 
   const hangleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('pase')
     const { value } = e.target;
     if (value.length > 0) {
       setLabelUp(true)
