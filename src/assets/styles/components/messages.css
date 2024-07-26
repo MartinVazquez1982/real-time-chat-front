@@ -1,0 +1,31 @@
+li {
+    width: 95%;
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    overflow: hidden;
+
+    padding: 5px 0;
+}
+
+li small {
+    color: #0f0;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+li p{
+    margin: 0;
+    margin-top: 0.5rem;
+    overflow-wrap: break-word;
+    text-align: justify;
+}
+
+hr{
+    width: 100%;
+    background-color: #f1f1f1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+}

@@ -2,13 +2,20 @@ import '../../assets/styles/components/contact.css'
 
 interface UserContact {
   username: string
+  openChat: (username: string) => void
 }
 
 function Contact({
-  username
+  username,
+  openChat
 }: UserContact){
+
+  const open = () => {
+    openChat(username)
+  }
+
   return (
-    <article>
+    <article onClick={open}>
       <svg id='icon-contact' version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
         <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#f1f1f1" stroke="none">
           <path d="M2370 5114 c-19 -2 -78 -9 -130 -15 -791 -90 -1522 -586 -1924 -1305

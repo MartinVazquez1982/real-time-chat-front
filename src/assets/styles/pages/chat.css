@@ -2,9 +2,10 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   display: grid;
   grid-template-areas:
-    'header header header header'
-    'contact chat chat chat';
+    'header header'
+    'contact chat';
   grid-template-rows: 10% 90%;
+  grid-template-columns: 30% 70%;
   height: 90vh;
   width: 80vw;
 }
@@ -46,4 +47,38 @@ header{
   height: 100%;
   width: 100%;
   background-color: transparent;
+}
+
+.chat{
+  grid-area: chat;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chat #no-chat {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  div {
+    width: 97%;
+    height: 98%;
+    background-color: #1c1c1c;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 30%;
+    }
+  }
 }

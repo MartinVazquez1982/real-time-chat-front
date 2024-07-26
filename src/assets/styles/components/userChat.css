@@ -1,0 +1,73 @@
+.header-contact, .messages, .input-messages{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    div {
+      width: 95%;
+    }
+  }
+  
+  .header-contact{
+    height: 10%;
+    align-items: flex-end;
+    div{
+      height: 90%;
+      background-color: #1c1c1c;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+      
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  
+  .messages{
+    height: 80%;
+    align-items: center;
+    div{
+      height: 95%;
+      background-color: #1c1c1c;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+    }
+  }
+  
+  .input-messages{
+    height: 10%;
+    align-items: center;
+  
+    .new-messages{
+  
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  
+      textarea{
+        width: 93%;
+        font-size: 1rem;
+        resize: none;
+        color: #f2f2f2;
+        background-color: #1c1c1c;
+        border: none;
+        text-align: left;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+      }
+  
+      textarea::placeholder {
+        color: #f2f2f2;
+        font-style: italic;
+      }
+    
+      button{
+        padding: 5px;
+        width: 4%;
+        background-color: transparent;
+        margin-right: 5px;
+        cursor: pointer;
+      }
+  
+      button:hover{
+        width: 5%;
+        margin-right: 0;
+      }
+    }
+  }
