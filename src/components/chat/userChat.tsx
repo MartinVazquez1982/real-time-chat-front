@@ -1,23 +1,54 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, FormEvent } from 'react'
 import '../../assets/styles/components/userChat.css'
 import Message from './messages'
+import { MessageType } from '../../type/chatSystem'
 
 interface props {
   user: string
+  messages: MessageType[]
+  sendMessage: (message: string) => void
 }
 
-function UserChat({ user }: props){
+function UserChat({ 
+  user,
+  messages,
+  sendMessage
+}: props) {
 
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>('')
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const textArea = useRef<HTMLTextAreaElement>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  };
-
-  const sendMessage = () => {
-
+    setMessage(event.target.value)
   }
 
+  const sendMessageInput = (e: FormEvent<HTMLFormElement> ) => {
+    e.preventDefault()
+    if (message.trim() !== '') {
+      sendMessage(message)
+      setMessage('')
+    }
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      sendMessageInput(event as unknown as React.FormEvent<HTMLFormElement>)
+    }
+  }
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight
+    }
+  }, [messages])
+
+  useEffect(() => {
+    if (textArea.current) {
+      textArea.current.focus()
+    }
+  })
 
   return (
     <>
@@ -27,20 +58,24 @@ function UserChat({ user }: props){
         </div>
       </div>
       <div className='messages'>
-        <div>
+        <div ref={messagesEndRef}>
           <ul>
-            <Message date='11/7/2001' menssage='hola' isMine={false}/>
-            <Message date='11/7/2001' menssage='hola' isMine={true}/>
+            {messages.map((item, index) => (
+              <Message key={index} date={item.date} menssage={item.message} isMine={item.isMine}/>
+            ))}
           </ul>
         </div>
       </div>
        <div className='input-messages'>
-        <div className='new-messages'>
+        <form className='new-messages' onSubmit={sendMessageInput}>
           <textarea 
             placeholder='Ingrese su mensaje'
             value={message}
-            onChange={handleChange}/>
-          <button onClick={sendMessage}>
+            onChange={handleChange}
+            ref={textArea}
+            onKeyDown={handleKeyDown}
+          />
+          <button type='submit'>
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.000000 512.000000">
               <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#0f0" stroke="none">
                   <path d="M2480 4346 c-1273 -425 -2329 -780 -2346 -789 -46 -24 -101 -92 -120
@@ -54,7 +89,7 @@ function UserChat({ user }: props){
               </g>
             </svg>
           </button>
-        </div>
+        </form>
       </div>
     </>
   )

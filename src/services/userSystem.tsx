@@ -19,19 +19,30 @@ export class UserSystem {
         return response.json()
     }
 
-    static async register(
-        newUser: RegisterType
-    ) {
-        const response = await fetch(
-            'http://localhost:3000/auth/register',
-            {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json' 
-                },
-                body: JSON.stringify(newUser)
-            }
-        )
-        return response.json()
-    }
+  static async register(
+    newUser: RegisterType
+  ) {
+    const response = await fetch(
+      'http://localhost:3000/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(newUser)
+      }
+    )
+    return response.json()
+  }
+
+  static async logout() {
+    const response = await fetch(
+      'http://localhost:3000/auth/logout',
+      {
+        method: 'POST',
+        credentials: 'include'
+      }
+    )
+    return response
+  }
 }

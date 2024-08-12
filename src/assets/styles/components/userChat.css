@@ -28,6 +28,10 @@
       height: 95%;
       background-color: #1c1c1c;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+      -ms-overflow-style: none;  /* Oculta la barra de desplazamiento en Internet Explorer y Edge */
+      scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
     }
   }
   
@@ -36,6 +40,8 @@
     align-items: center;
   
     .new-messages{
+
+      width: 95%;
   
       display: flex;
       align-items: center;

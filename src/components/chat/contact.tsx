@@ -1,18 +1,27 @@
+import { useEffect, useState } from 'react'
 import '../../assets/styles/components/contact.css'
 
 interface UserContact {
   username: string
   openChat: (username: string) => void
+  pendingMessages: number
 }
 
 function Contact({
   username,
-  openChat
+  openChat,
+  pendingMessages
 }: UserContact){
+
+  const [ isActive, setActive ] = useState(false)
 
   const open = () => {
     openChat(username)
   }
+
+  useEffect(() => {
+    setActive(pendingMessages > 0)
+  }, [pendingMessages])
 
   return (
     <article onClick={open}>
@@ -41,6 +50,9 @@ function Contact({
       </svg>
       <div className='contact-data'>
         <p>{username}</p>
+        <div className={`new-messages ${isActive ? 'active' : ''}`}>
+          <p>{pendingMessages}</p>
+        </div>
       </div>
     </article>
   )

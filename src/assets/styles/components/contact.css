@@ -28,4 +28,34 @@ article:hover p {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-data .new-messages{
+    position: absolute;
+    right: 0;
+    width: 13%;
+    background-color: #0f0;
+    height: 75%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 25% 0 0 25%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+.contact-data .new-messages.active{
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.contact-data .new-messages p {
+    color: #1c1c1c;
+    font-size: 1.1rem;
 }
