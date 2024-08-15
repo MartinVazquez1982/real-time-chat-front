@@ -47,6 +47,11 @@ header{
   height: 100%;
   width: 100%;
   background-color: transparent;
+
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
 }
 
 .chat{
