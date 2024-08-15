@@ -1,34 +1,52 @@
 import '../assets/styles/pages/login.css'
 import ButtonForm from '../components/forms/buttonForm'
 import Input from '../components/forms/input'
+import ErrorMsg from '../components/forms/errorMsg'
 import { LoginType } from '../type/userSystem'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import { UserSystem } from '../services/userSystem'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 function Login () {
 
   const [ user, setUser ] = useState<LoginType>({ username:"", password:"" })
   const navigate = useNavigate()
 
+  const [ msgError, setMsgError ] = useState('')
+  const [ showMsgError, setShowMsgError ] = useState(false)
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setUser(prevUser => ({
       ...prevUser,
       [name]: value
     }))
   }
 
+  const verifyUser = () => {
+    const result = user.username !== '' && user.password !== ''
+    if (user.username === '') {
+      setMsgError('Complete username')
+      setShowMsgError(true)
+    } else if (user.password === '') {
+      setMsgError('Complete password')
+      setShowMsgError(true)
+    }
+    return result
+  }
+
   const handleButton = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    UserSystem.login(user)
-    .then( data => {
-      if (data.status !== 200){
-        console.error('error')
-      } else {
+    e.preventDefault()
+    if (verifyUser()) {
+      UserSystem.login(user)
+      .then( data => {
         navigate(`/chat/${data.user.username}`)
-      }
-    }) // Ver temas de errores
+      })
+      .catch ( error => {
+        setMsgError(error.message)
+        setShowMsgError(true)
+      })
+    }
   }
 
   return (
@@ -43,6 +61,7 @@ function Login () {
         </div>
         <ButtonForm text='LOGIN'/>
       </form>
+      <ErrorMsg show={showMsgError} message={msgError}/>
     </section>
   )
 }

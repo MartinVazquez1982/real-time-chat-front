@@ -1,5 +1,7 @@
 import ButtonForm from '../components/forms/buttonForm'
+import ErrorMsg from '../components/forms/errorMsg'
 import Input from '../components/forms/input'
+import Snackbar from '../components/forms/snackbar'
 import '../assets/styles/pages/login.css'
 import { RegisterType, RegisterConfirmType } from '../type/userSystem'
 import { useState, ChangeEvent, FormEvent  } from 'react'
@@ -9,6 +11,11 @@ function SignUp () {
 
   const [ newUser, setNewUser ] = useState<RegisterConfirmType>({username:'', email:'',password:'', confirmPassword:''})
 
+  const [ msgError, setMsgError ] = useState('')
+  const [ showError, setShowError ] = useState(false)
+
+  const [ showSnack, setShowSnack ] = useState(false)
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewUser(prevUser => ({
@@ -17,42 +24,74 @@ function SignUp () {
     }))
   }
 
+  const chekNewUser = () => {
+    const fields = {
+      username: 'Complete username',
+      email: 'Complete email',
+      password: 'Complete password',
+      confirmPassword: 'Confirm Password',
+    };
+
+    for (const [field, message] of Object.entries(fields)) {
+      if (newUser[field as keyof RegisterConfirmType] === '') {
+        setMsgError(message)
+        setShowError(true)
+        return false
+      }
+    }
+
+    if (newUser.password !== newUser.confirmPassword) {
+      setMsgError('Passwords do not match')
+      setShowError(true)
+      return false
+    }
+
+    return true
+  }
+
   const handleButton = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { username, password, confirmPassword, email } = newUser
-    if ( password === confirmPassword ) {
+    e.preventDefault()
+    const { username, password, email } = newUser
+    if ( chekNewUser() ) {
       const api: RegisterType = { username, password, email }
       UserSystem.register(api)
-      .then( res => {
-        console.log(res)
-        if (res.status !== 200) {
-          console.error('Error')
-        } else {
-          setNewUser({username:'', password:'', confirmPassword:'', email:''})
-        }
+      .then( () => {
+        setNewUser({username:'', password:'', confirmPassword:'', email:''})
+        setShowSnack(true)
+        setShowError(false)
       }).catch( err => {
-        console.error(err)
-      }
-      ) // Ver tema de errores
+        setMsgError(err.message)
+        setShowError(true)
+      })
     }
   }
 
 
   return (
-    <section>
-      <h1>SIGN UP</h1>
-      <form onSubmit={handleButton}>
-        <Input label='Username' type='text' name='username' value={newUser.username} hangle={handleChange}/>
-        <Input label='Email' type='email' name='email' value={newUser.email} hangle={handleChange}/>
-        <Input label='Password' type='password' name='password' value={newUser.password} hangle={handleChange}/>
-        <Input label='Confirm Password' type='password' name='confirmPassword' value={newUser.confirmPassword} hangle={handleChange}/>
-        <div className='links'>
-          <p id='forgot-password'>Already have an account?</p>
-          <a id='signup' href="/">Sign in</a>
-        </div>
-        <ButtonForm text='SIGN UP'/>
-      </form>
-    </section>
+    <>
+      <section>
+        <h1>SIGN UP</h1>
+        <form onSubmit={handleButton}>
+          <Input label='Username' type='text' name='username' value={newUser.username} hangle={handleChange}/>
+          <Input label='Email' type='email' name='email' value={newUser.email} hangle={handleChange}/>
+          <Input label='Password' type='password' name='password' value={newUser.password} hangle={handleChange}/>
+          <Input label='Confirm Password' type='password' name='confirmPassword' value={newUser.confirmPassword} hangle={handleChange}/>
+          <div className='links'>
+            <p id='forgot-password'>Already have an account?</p>
+            <a id='signup' href="/">Sign in</a>
+          </div>
+          <ButtonForm text='SIGN UP'/>
+        </form>
+          <ErrorMsg show={showError} message={msgError}/>
+      </section>
+      <Snackbar 
+        show={showSnack} 
+        message='User created'
+        noShowWindow={ () => {
+          setShowSnack(false)
+        }}
+      />
+    </>
   )
 }
 

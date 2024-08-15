@@ -1,5 +1,5 @@
 import '../../assets/styles/components/input.css'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, useEffect } from 'react'
 
 
 interface props {
@@ -23,6 +23,12 @@ const Input: React.FC<props> = ({label, type, name, value, hangle}) => {
     }
     hangle(e)
   }
+
+  useEffect(() => {
+    if (value === '') {
+      setLabelUp(false)
+    }
+  }, [value])
   
   return (
     <div className='container-input'>
