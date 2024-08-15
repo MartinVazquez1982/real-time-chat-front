@@ -16,7 +16,19 @@ export class UserSystem {
                 credentials: 'include'
             }
         )
-        return response.json()
+        const data = await response.json()
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw Error(data.message)
+          } else if(response.status >= 500) {
+            throw Error('There was a problem processing your request. Please try again later.')
+          } else {
+            throw Error('Unexpected error. Please try again later.')
+          }
+        }
+
+        return data
     }
 
   static async register(
@@ -32,7 +44,19 @@ export class UserSystem {
         body: JSON.stringify(newUser)
       }
     )
-    return response.json()
+    const data = await response.json()
+        
+    if (!response.ok) {
+      if (400 <= response.status && response.status <= 500) {
+        throw Error(data.message)
+      } else if(response.status >= 500) {
+        throw Error('There was a problem processing your request. Please try again later.')
+      } else {
+        throw Error('Unexpected error. Please try again later.')
+      }
+    }
+
+    return data
   }
 
   static async logout() {
