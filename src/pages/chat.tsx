@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { ContactType, MessageType, PendingMessage } from '../type/chatSystem'
 import { ChatSystem } from '../services/chatsystem'
 import { format } from 'date-fns';
@@ -16,8 +16,8 @@ function Chat(){
   
   const [messages, setMessages] = useState<MessageType[]>([])
 
-  const [ contSelect, setContSelect ] = useState(false)
-  const [ userSelect, setUserSelect ] = useState('')
+  const contSelect = useRef(false)
+  const userSelect = useRef('')
 
   const [ pendingMessages, setPendingMessages ] = useState<PendingMessage>({})
 
@@ -40,9 +40,9 @@ function Chat(){
   }
 
   const openChat = (username: string) => {
-    if (username !== userSelect) {
-      setContSelect(true)
-      setUserSelect(username)
+    if (username !== userSelect.current) {
+      contSelect.current = true
+      userSelect.current = username
       ChatSystem.getMessages(username)
         .then( (data => {
           const oldMessages = (data as MessageType[]).map(message => ({
@@ -59,22 +59,12 @@ function Chat(){
         })
     }
   }
- 
-  useEffect(() => {
-    ChatSystem.chat()
-    .then( (data) => {
-      if (data !== 200) {
-        new Error('Sin contactos')
-      }
-      (data as ContactType[]).map(contact => {
-        resetPendingMessages(contact.username)
-      })
-  })
-  }, [])
 
-  const socket = ChatSystem.getSocket()
+  const getUserSelect = () => {
+    return userSelect.current
+  }
 
-  socket.on('chat_message', (message, from, to, formattedDateTime) => {
+  const receiveMessage = (message: string, from: string, to: string, formattedDateTime: string, userSelect: string) => {
     const isMine = to !== username
     if (isMine || userSelect === from){
       const newMessage = {
@@ -82,18 +72,31 @@ function Chat(){
         'message': message,
         'isMine': isMine
       }
-  
-      setMessages([...messages, newMessage])
+      
+      setMessages((messages) => [...messages, newMessage])
     } else {
       updatePendingMessages(from)
     }
-  })
+  }
+ 
+  useEffect(() => {
+    ChatSystem.chat()
+      .then( (data) => {
+        if (data !== 200) {
+          new Error('Sin contactos')
+        }
+        (data as ContactType[]).map(contact => {
+          resetPendingMessages(contact.username)
+        })
+      })
+    ChatSystem.loadSocket(receiveMessage, getUserSelect)
+  }, [])
 
   const sendMessage = (message: string) => {
     const now = new Date()
     const pad = (num: number) => (num < 10 ? '0' + num : num);
     const formattedDateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
-    socket.emit('chat_message', message, userSelect, formattedDateTime)
+    ChatSystem.sendMessage(message, userSelect.current, formattedDateTime)
   }
 
   return(
@@ -115,9 +118,9 @@ function Chat(){
         </div>
       </div>
       <div className='chat'>
-        { contSelect ? 
+        { contSelect.current ? 
             <UserChat 
-              user={userSelect}
+              user={userSelect.current}
               messages={messages}
               sendMessage={sendMessage}
             /> 
