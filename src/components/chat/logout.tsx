@@ -1,4 +1,5 @@
 import '../../assets/styles/components/logout.css'
+import { ChatSystem } from '../../services/chatsystem';
 import { UserSystem } from '../../services/userSystem'
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ function LogOut() {
 			const responde = await UserSystem.logout()
 			if (responde.status === 200){
 				navigate('/')
+        ChatSystem.logoutSocket()
 			}
 		} catch {
 			console.log()

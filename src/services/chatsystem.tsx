@@ -37,4 +37,10 @@ export class ChatSystem {
       ChatSystem.socket.emit('chat_message', message, to, formattedDateTime)
     }
   }
+
+  static logoutSocket() {
+    if (ChatSystem.socket !== null && ChatSystem.socket.connected) {
+      ChatSystem.socket.disconnect()
+    }
+  }
 }
