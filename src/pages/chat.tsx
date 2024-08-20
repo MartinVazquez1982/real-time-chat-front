@@ -59,6 +59,7 @@ function Chat(){
             date: formatDate(message.date),
           }))
           setMessages(oldMessages)
+          ChatSystem.messagesViewed(username)
         }))
         .catch ( () => {
           setMessages([])

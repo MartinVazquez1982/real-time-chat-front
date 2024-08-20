@@ -8,7 +8,11 @@ export class ChatSystem {
     const response = await fetch('http://localhost:3000/chat/contact',
       {
         method: 'GET',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
       })
     return response.json()
   }
@@ -41,6 +45,12 @@ export class ChatSystem {
   static logoutSocket() {
     if (ChatSystem.socket !== null && ChatSystem.socket.connected) {
       ChatSystem.socket.disconnect()
+    }
+  }
+
+  static messagesViewed (to: string) {
+    if (ChatSystem.socket !== null) {
+      ChatSystem.socket.emit('viewed', to)
     }
   }
 }
