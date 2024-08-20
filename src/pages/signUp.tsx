@@ -72,15 +72,19 @@ function SignUp () {
       <section>
         <h1>SIGN UP</h1>
         <form onSubmit={handleButton}>
-          <Input label='Username' type='text' name='username' value={newUser.username} hangle={handleChange}/>
-          <Input label='Email' type='email' name='email' value={newUser.email} hangle={handleChange}/>
-          <Input label='Password' type='password' name='password' value={newUser.password} hangle={handleChange}/>
-          <Input label='Confirm Password' type='password' name='confirmPassword' value={newUser.confirmPassword} hangle={handleChange}/>
+          <Input label='Username' type='text' name='username' value={newUser.username} hangle={handleChange} disable={showSnack}/>
+          <Input label='Email' type='email' name='email' value={newUser.email} hangle={handleChange} disable={showSnack}/>
+          <Input label='Password' type='password' name='password' value={newUser.password} hangle={handleChange} disable={showSnack}/>
+          <Input label='Confirm Password' type='password' name='confirmPassword' value={newUser.confirmPassword} hangle={handleChange} disable={showSnack}/>
           <div className='links'>
             <p id='forgot-password'>Already have an account?</p>
-            <a id='signup' href="/">Sign in</a>
+            <a 
+              id='signup' 
+              href="/"
+              onClick={e => showSnack && e.preventDefault()}
+            >Sign in</a>
           </div>
-          <ButtonForm text='SIGN UP'/>
+          <ButtonForm text='SIGN UP' disable={showSnack}/>
         </form>
           <ErrorMsg show={showError} message={msgError}/>
       </section>

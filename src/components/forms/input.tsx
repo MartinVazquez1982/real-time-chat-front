@@ -7,10 +7,11 @@ interface props {
   type: string
   name: string
   value: string
+  disable?: boolean
   hangle: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-const Input: React.FC<props> = ({label, type, name, value, hangle}) => {
+const Input: React.FC<props> = ({label, type, name, value, disable = false, hangle}) => {
   
   const [labelUp, setLabelUp] = useState(false)
 
@@ -32,7 +33,7 @@ const Input: React.FC<props> = ({label, type, name, value, hangle}) => {
   
   return (
     <div className='container-input'>
-      <input type={type} name={name} onChange={hangleChange} value={value}/>
+      <input type={type} name={name} onChange={hangleChange} value={value} disabled={disable}/>
       <label className={labelUp ? 'value-on' : 'value-off'}>{label}</label>
     </div>
   )
