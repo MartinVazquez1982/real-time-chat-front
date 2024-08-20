@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { ContactType, MessageType, PendingMessage } from '../type/chatSystem'
+import { ContactType, MessageType } from '../type/chatSystem'
 import { ChatSystem } from '../services/chatsystem'
 import { format } from 'date-fns';
 import Contact from '../components/chat/contact'
@@ -19,20 +19,29 @@ function Chat(){
   const contSelect = useRef(false)
   const userSelect = useRef('')
 
-  const [ pendingMessages, setPendingMessages ] = useState<PendingMessage>({})
+  const [ pendingMessages, setPendingMessages ] = useState<ContactType[]>([])
 
   const updatePendingMessages = (username: string) => {
-    setPendingMessages(prevState => ({
-      ...prevState,
-      [username]: (prevState[username] || 0) + 1
-    }))
+    setPendingMessages(prevState => {
+      const contactIndex = prevState.findIndex(contact => contact.username === username)
+      
+      // Extrae el contacto y actualiza `pendingMessages`
+      const [contactToMove]: ContactType[] = prevState.splice(contactIndex, 1)
+      contactToMove.messagesPending++
+
+      // Coloca el contacto al principio del array
+      return [contactToMove, ...prevState];
+    })
   }
 
   const resetPendingMessages = (username: string) => {
-    setPendingMessages(prevState => ({
-      ...prevState,
-      [username]: 0 
-    }))
+    setPendingMessages(prevState =>
+      prevState.map(contact =>
+        contact.username === username
+          ? { ...contact, messagesPending: 0 }
+          : contact
+      )
+    )
   }
 
   const formatDate = (date: string) => {
@@ -75,6 +84,7 @@ function Chat(){
       
       setMessages((messages) => [...messages, newMessage])
     } else {
+      console.log('pase')
       updatePendingMessages(from)
     }
   }
@@ -85,9 +95,7 @@ function Chat(){
         if (data !== 200) {
           new Error('Sin contactos')
         }
-        (data as ContactType[]).map(contact => {
-          resetPendingMessages(contact.username)
-        })
+        setPendingMessages(data as ContactType[])
       })
     ChatSystem.loadSocket(receiveMessage, getUserSelect)
   }, [])
@@ -102,18 +110,18 @@ function Chat(){
   return(
     <section className='chat-container'>
       <header>
-        <LogOut></LogOut>
+        <LogOut />
         <h1>{username}</h1>
       </header>
       <div className='contact'>
         <img id='icon' src={contactBackground} alt="" />
         <div className='contact-list'>
-          {Object.entries(pendingMessages).map(([username, size])  => 
+          {pendingMessages.map( contact  => 
             <Contact 
-              key={username} 
-              username={username} 
+              key={contact.username} 
+              username={contact.username} 
               openChat={openChat}
-              pendingMessages={size}
+              pendingMessages={contact.messagesPending}
             ></Contact> )}
         </div>
       </div>

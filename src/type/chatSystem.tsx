@@ -1,6 +1,7 @@
 export interface ContactType {
     id: string
     username: string
+    messagesPending: number
 }
 
 export interface MessageType {
