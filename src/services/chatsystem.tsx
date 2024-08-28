@@ -26,31 +26,44 @@ export class ChatSystem {
     return response.json()
   }
 
-  static loadSocket(
-    receiveMessage: (message: string, from: string, to: string, formattedDateTime: string, userSelect: string) => void,
-    getUserSelect: () => string
+  static async loadSocket(
+    receiveMessage: (message: string, from: string, to: string, formattedDateTime: string) => void,
+    userConnected: (user: string) => void,
+    userdisconnected: (user: string) => void
   ) {
     ChatSystem.socket = io('http://localhost:3000', { transports: ['websocket', 'polling', 'flashsocket'] })
     ChatSystem.socket.on('chat_message', (message, from, to, formattedDateTime) => {
-      receiveMessage(message, from, to, formattedDateTime, getUserSelect())
+      receiveMessage(message, from, to, formattedDateTime)
+    })
+    ChatSystem.socket.on('user_connected', (connected) => {
+      userConnected(connected)
+    })
+    ChatSystem.socket.on('user_desconected', (disconnected) => {
+      userdisconnected(disconnected)
     })
   }
 
-  static sendMessage(message: string, to: string, formattedDateTime: string) {
+  static async sendMessage(message: string, to: string, formattedDateTime: string) {
     if (ChatSystem.socket !== null) {
       ChatSystem.socket.emit('chat_message', message, to, formattedDateTime)
     }
   }
 
-  static logoutSocket() {
+  static async logoutSocket() {
     if (ChatSystem.socket !== null && ChatSystem.socket.connected) {
       ChatSystem.socket.disconnect()
     }
   }
 
-  static messagesViewed (to: string) {
+  static async messagesViewed (to: string) {
     if (ChatSystem.socket !== null) {
       ChatSystem.socket.emit('viewed', to)
+    }
+  }
+
+  static async userConnected (user: string) {
+    if (ChatSystem.socket !== null) {
+      ChatSystem.socket.emit('user_connected', user)
     }
   }
 }

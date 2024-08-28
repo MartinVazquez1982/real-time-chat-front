@@ -18,8 +18,10 @@ function Chat(){
 
   const contSelect = useRef(false)
   const userSelect = useRef('')
+  const [ userConnected, SetUserConnected ]= useState(false)
 
   const [ pendingMessages, setPendingMessages ] = useState<ContactType[]>([])
+
 
   const updatePendingMessages = (username: string) => {
     setPendingMessages(prevState => {
@@ -52,31 +54,30 @@ function Chat(){
     if (username !== userSelect.current) {
       contSelect.current = true
       userSelect.current = username
-      ChatSystem.getMessages(username)
-        .then( (data => {
-          const oldMessages = (data as MessageType[]).map(message => ({
-            ...message,
-            date: formatDate(message.date),
-          }))
-          setMessages(oldMessages)
-          ChatSystem.messagesViewed(username)
-        }))
-        .catch ( () => {
-          setMessages([])
-        })
-        .finally( () => {
-          resetPendingMessages(username)
-        })
+      loadChat(username)
     }
   }
 
-  const getUserSelect = () => {
-    return userSelect.current
+  const loadChat = async (username: string) => {
+    try {
+      const data = await ChatSystem.getMessages(username)
+      const oldMessages = (data as MessageType[]).map(message => ({
+        ...message,
+        date: formatDate(message.date),
+      }))
+      setMessages(oldMessages)
+      await ChatSystem.userConnected(username)
+      await ChatSystem.messagesViewed(username)
+    } catch {
+      setMessages([])
+    } finally {
+      resetPendingMessages(username)
+    }
   }
 
-  const receiveMessage = (message: string, from: string, to: string, formattedDateTime: string, userSelect: string) => {
+  const receiveMessage = (message: string, from: string, to: string, formattedDateTime: string) => {
     const isMine = to !== username
-    if (isMine || userSelect === from){
+    if (isMine || userSelect.current === from){
       const newMessage = {
         'date': formatDate(formattedDateTime),
         'message': message,
@@ -85,8 +86,21 @@ function Chat(){
       
       setMessages((messages) => [...messages, newMessage])
     } else {
-      console.log('pase')
       updatePendingMessages(from)
+    }
+  }
+
+  const userChatDisconnect = (user: string) => {
+    if (userSelect.current === user){
+      SetUserConnected(false)
+    }
+  }
+
+  const userChatConnect = (user: string) => {
+    if (userSelect.current === user){
+      SetUserConnected(true)
+    } else {
+      SetUserConnected(false)
     }
   }
  
@@ -98,7 +112,7 @@ function Chat(){
         }
         setPendingMessages(data as ContactType[])
       })
-    ChatSystem.loadSocket(receiveMessage, getUserSelect)
+    ChatSystem.loadSocket(receiveMessage, userChatConnect, userChatDisconnect)
   }, [])
 
   const sendMessage = (message: string) => {
@@ -132,6 +146,7 @@ function Chat(){
               user={userSelect.current}
               messages={messages}
               sendMessage={sendMessage}
+              connect={userConnected}
             /> 
           : 
             <div id='no-chat'>

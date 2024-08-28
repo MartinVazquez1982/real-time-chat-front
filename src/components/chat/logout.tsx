@@ -11,7 +11,7 @@ function LogOut() {
 			const responde = await UserSystem.logout()
 			if (responde.status === 200){
 				navigate('/')
-        ChatSystem.logoutSocket()
+        await ChatSystem.logoutSocket()
 			}
 		} catch {
 			console.log()

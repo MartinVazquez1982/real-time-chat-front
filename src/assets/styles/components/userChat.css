@@ -4,6 +4,15 @@
     justify-content: center;
     div {
       width: 95%;
+      position: relative;
+
+      img {
+        position: absolute;
+        right: 5%;
+
+        width: 5%;
+      }
+
     }
   }
   

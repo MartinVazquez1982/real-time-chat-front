@@ -2,22 +2,27 @@ import { useState, useRef, useEffect, FormEvent } from 'react'
 import '../../assets/styles/components/userChat.css'
 import Message from './messages'
 import { MessageType } from '../../type/chatSystem'
+import connected from '../../assets/images/connected.svg'
+import disconnected from '../../assets/images/disconnected.svg'
 
 interface props {
   user: string
   messages: MessageType[]
   sendMessage: (message: string) => void
+  connect: boolean
 }
 
 function UserChat({ 
   user,
   messages,
-  sendMessage
+  sendMessage,
+  connect
 }: props) {
 
   const [message, setMessage] = useState<string>('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textArea = useRef<HTMLTextAreaElement>(null)
+  const [connectImg, setConnectImg] = useState('')
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value)
@@ -45,16 +50,21 @@ function UserChat({
   }, [messages])
 
   useEffect(() => {
+    setConnectImg(connect ? connected : disconnected)
+  }, [connect])
+
+  useEffect(() => {
     if (textArea.current) {
       textArea.current.focus()
     }
-  })
+  },[])
 
   return (
     <>
       <div className='header-contact'>
         <div>
           <h1>{user}</h1>
+          <img src={connectImg} />
         </div>
       </div>
       <div className='messages'>
