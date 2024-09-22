@@ -1,11 +1,12 @@
 import io, { Socket } from 'socket.io-client'
+import { API_REAL_TIME_CHAT_URL } from '../utils/config'
 
 export class ChatSystem {
 
   static socket: Socket | null = null
   
   static async chat() {
-    const response = await fetch('http://localhost:3000/chat/contact',
+    const response = await fetch(`${API_REAL_TIME_CHAT_URL}/chat/contact`,
       {
         method: 'GET',
         credentials: 'include',
@@ -18,7 +19,7 @@ export class ChatSystem {
   }
 
   static async getMessages(to: string) {
-    const response = await fetch(`http://localhost:3000/chat/messages/${to}`,
+    const response = await fetch(`${API_REAL_TIME_CHAT_URL}/chat/messages/${to}`,
       {
         method: 'GET',
         credentials: 'include'
@@ -31,7 +32,7 @@ export class ChatSystem {
     userConnected: (user: string) => void,
     userdisconnected: (user: string) => void
   ) {
-    ChatSystem.socket = io('http://localhost:3000', { transports: ['websocket', 'polling', 'flashsocket'] })
+    ChatSystem.socket = io(`${API_REAL_TIME_CHAT_URL}`, { transports: ['websocket', 'polling', 'flashsocket'] })
     ChatSystem.socket.on('chat_message', (message, from, to, formattedDateTime) => {
       receiveMessage(message, from, to, formattedDateTime)
     })

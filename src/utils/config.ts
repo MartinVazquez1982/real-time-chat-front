@@ -1,0 +1,1 @@
+export const API_REAL_TIME_CHAT_URL = import.meta.env.VITE_API_REAL_TIME_CHAT_URL || "http://localhost:3000";

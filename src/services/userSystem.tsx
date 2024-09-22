@@ -1,4 +1,5 @@
 import { LoginType, RegisterType } from "../type/userSystem"
+import { API_REAL_TIME_CHAT_URL } from '../utils/config'
 
 export class UserSystem {
 
@@ -6,7 +7,7 @@ export class UserSystem {
         user: LoginType
     ) {
         const response = await fetch(
-            'http://localhost:3000/auth/login',
+            `${API_REAL_TIME_CHAT_URL}/auth/login`,
             {
                 method: 'POST',
                 headers: {
@@ -35,7 +36,7 @@ export class UserSystem {
     newUser: RegisterType
   ) {
     const response = await fetch(
-      'http://localhost:3000/auth/register',
+      `${API_REAL_TIME_CHAT_URL}/auth/register`,
       {
         method: 'POST',
         headers: {
@@ -61,7 +62,7 @@ export class UserSystem {
 
   static async logout() {
     const response = await fetch(
-      'http://localhost:3000/auth/logout',
+      `${API_REAL_TIME_CHAT_URL}/auth/logout`,
       {
         method: 'POST',
         credentials: 'include'
