@@ -4,7 +4,6 @@ import { ChatSystem } from '../services/chatsystem'
 import { format } from 'date-fns';
 import Contact from '../components/chat/contact'
 import '../assets/styles/pages/chat.css'
-import contactBackground from '../assets/images/contact-background.svg'
 import { useParams } from 'react-router-dom'
 import UserChat from '../components/chat/userChat'
 import LogOut from '../components/chat/logout';
@@ -16,7 +15,7 @@ function Chat(){
   
   const [messages, setMessages] = useState<MessageType[]>([])
 
-  const contSelect = useRef(false)
+  const [contSelect, setContSelect] = useState(false)
   const userSelect = useRef('')
   const [ userConnected, SetUserConnected ]= useState(false)
 
@@ -52,7 +51,7 @@ function Chat(){
 
   const openChat = (username: string) => {
     if (username !== userSelect.current) {
-      contSelect.current = true
+      setContSelect(true)
       userSelect.current = username
       loadChat(username)
     }
@@ -72,6 +71,13 @@ function Chat(){
       setMessages([])
     } finally {
       resetPendingMessages(username)
+    }
+  }
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      setContSelect(false)
+      userSelect.current = ''
     }
   }
 
@@ -113,6 +119,10 @@ function Chat(){
         setPendingMessages(data as ContactType[])
       })
     ChatSystem.loadSocket(receiveMessage, userChatConnect, userChatDisconnect)
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
   }, [])
 
   const sendMessage = (message: string) => {
@@ -129,7 +139,9 @@ function Chat(){
         <h1>{username}</h1>
       </header>
       <div className='contact'>
-        <img id='icon' src={contactBackground} alt="" />
+        <div className='people'>
+          <h2>People</h2>
+        </div>
         <div className='contact-list'>
           {pendingMessages.map( contact  => 
             <Contact 
@@ -141,7 +153,7 @@ function Chat(){
         </div>
       </div>
       <div className='chat'>
-        { contSelect.current ? 
+        { contSelect ? 
             <UserChat 
               user={userSelect.current}
               messages={messages}

@@ -36,20 +36,26 @@ header{
   z-index: 1;
 }
 
+.people {
+  background-color: #1c1c1c;
+  margin-top: 1.5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  h2 {
+    color: #0f0;
+  }
+}
+
 .contact-list{
-  position: absolute;
-  z-index: 2;
-  top: 0%;
-  
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
-  width: 100%;
+  max-height: 100%;
   background-color: transparent;
-
+  overflow-y: auto;
   scroll-behavior: smooth;
-  overflow-y: scroll;
+  
   -ms-overflow-style: none; 
   scrollbar-width: none;
 }

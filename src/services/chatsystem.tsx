@@ -12,7 +12,8 @@ export class ChatSystem {
         credentials: 'include',
         headers: {
           'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
+          'Pragma': 'no-cache',
+          'Authorization': `${sessionStorage.getItem('sessionId')}`,
         }
       })
     return response.json()
@@ -22,7 +23,10 @@ export class ChatSystem {
     const response = await fetch(`${API_REAL_TIME_CHAT_URL}/chat/messages/${to}`,
       {
         method: 'GET',
-        credentials: 'include'
+        headers: {
+          Authorization: `${sessionStorage.getItem('sessionId')}`,
+        },
+        credentials: 'include',
       })
     return response.json()
   }
@@ -32,7 +36,12 @@ export class ChatSystem {
     userConnected: (user: string) => void,
     userdisconnected: (user: string) => void
   ) {
-    ChatSystem.socket = io(`${API_REAL_TIME_CHAT_URL}`, { transports: ['websocket', 'polling', 'flashsocket'] })
+    ChatSystem.socket = io(`${API_REAL_TIME_CHAT_URL}`, { 
+      transports: ['websocket', 'polling', 'flashsocket'],
+      auth: {
+        Authorization: sessionStorage.getItem('sessionId'),
+      },
+    })
     ChatSystem.socket.on('chat_message', (message, from, to, formattedDateTime) => {
       receiveMessage(message, from, to, formattedDateTime)
     })

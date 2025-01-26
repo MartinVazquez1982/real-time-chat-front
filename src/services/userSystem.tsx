@@ -28,7 +28,7 @@ export class UserSystem {
             throw Error('Unexpected error. Please try again later.')
           }
         }
-
+        sessionStorage.setItem('sessionId', data.sessionId);
         return data
     }
 
